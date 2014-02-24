@@ -4,8 +4,8 @@ var http = require('http'),
 var options = {
     pathnameOnly: true,
     router: {
-        '/something1' : 'node12.princeton.vicci.org',
-        '/something2' : 'node12.washington.vicci.org',
+        '/test1' : '10.129.9.23:3000',
+        '/test2' : '192.168.122.113:3000',
         '/something3' : 'node23.washington.vicci.org',
         '/something4' : 'node30.princeton.vicci.org',
         '/something5' : 'node32.princeton.vicci.org',
