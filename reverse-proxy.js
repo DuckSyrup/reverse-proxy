@@ -34,9 +34,11 @@ exports.addRoute = function(route, target) {
     var timer = setInterval(function(){
         if (ready) {
             clearInterval(timer);
-            if (db_api.addOne({key:route, ip:target})) {
-                httpProxy.ProxyTable.addRoute('/'+route, target);
-            }
+            db_api.addOne({key:route, ip:target}, function(worked) {
+                if (worked) {
+                    httpProxy.ProxyTable.addRoute('/'+route, target);
+                }
+            });
         }
     },10);
 }
@@ -45,9 +47,11 @@ exports.removeRoute = function(route) {
     var timer = setInterval(function(){
         if (ready) {
             clearInterval(timer);
-            if (db_api.removeOne(route)) {
-                httpProxy.ProxyTable.removeRoute(route);
-            }
+            db_api.removeOne(route, function(worked) {
+                if (worked) {
+                    httpProxy.ProxyTable.removeRoute(route);
+                }
+            });
         }
     },10);
 }
