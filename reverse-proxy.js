@@ -30,26 +30,34 @@ exports = function(port) {
 //    }
 //},10);
 
-exports.addRoute = function(route, target) {
+exports.addRoute = function(route, target, callback) {
     var timer = setInterval(function(){
         if (ready) {
             clearInterval(timer);
             db_api.addOne({key:route, ip:target}, function(worked) {
                 if (worked) {
                     httpProxy.ProxyTable.addRoute('/'+route, target);
+                    callback(true);
+                }
+                else {
+                    callback(false);
                 }
             });
         }
     },10);
 }
 
-exports.removeRoute = function(route) {
+exports.removeRoute = function(route, callback) {
     var timer = setInterval(function(){
         if (ready) {
             clearInterval(timer);
             db_api.removeOne(route, function(worked) {
                 if (worked) {
                     httpProxy.ProxyTable.removeRoute(route);
+                    callback(true);
+                }
+                else {
+                    callback(false);
                 }
             });
         }
