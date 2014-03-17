@@ -9,6 +9,7 @@ exp.use(express.bodyParser());
 var url = require('url');
 
 var db = require('./db_api');
+var rp = require('./reverse-proxy');
 
 //Basic statistics and landing page
 exp.get('/', function(req, res){
@@ -22,11 +23,24 @@ exp.get('/list', function(req,res){
 	});
 });
 
+//Remove a local slice name and its local IP pair from the routing table using GET paramaters
+exp.get('/remove', function(req,res){
+	if (req.query.key) {
+		rp.removeRoute(req.query.key, function(worked) {
+			worked ? res.send('Removed ' + req.query.key) : res.send('Failed to remove ' + req.query.key);
+		});
+	} else {
+		res.send("Key not received");
+	}
+});
+
 //Add a local IP/slice name pair to the routing table from the GET paramaters
 exp.get('/add', function(req, res){
 	if (req.query.ip && req.query.key) {
 		var newObj = {key: req.query.key, ip: req.query.ip};
-		db.addOne(newObj);
+		rp.addRoute(newObj, function(worked) {
+			worked ? res.send('Added ' + newObj) : res.send('Failed to add ' + newObj);
+		});
 	} else {
 		res.send("Key and/or IP not received.");
 	}
