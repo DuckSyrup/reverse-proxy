@@ -18,7 +18,7 @@ MongoClient.connect('mongodb://db-admin:hellokitty@ds031087.mongolab.com:31087/r
     
 });
 
-exports.addOne = function(obj) {
+exports.addOne = function(obj, callback) {
     var timer = setInterval(function(){
         if (ready) {
             clearInterval(timer);
@@ -29,11 +29,13 @@ exports.addOne = function(obj) {
                     if (err) {
                         console.log('addone err: ' + err);
                         //timer.clearInterval();
+                        callback(false);
                         return false;
                     }
                     else {
                         console.log('done with addone');
                         //timer.clearInterval();
+                        callback(true);
                         return true;
                     }
                 });
@@ -41,6 +43,7 @@ exports.addOne = function(obj) {
             else {
                 console.log(typeof obj.key + ' ' + typeof obj.ip)
                 //timer.clearInterval();
+                callback(false);
                 return false;
             }
         }
@@ -53,7 +56,7 @@ exports.addOne = function(obj) {
     
 }
 
-exports.removeOne = function(obj) {
+exports.removeOne = function(obj, callback) {
     var timer = setInterval(function(){
         if (ready) {
             clearInterval(timer);
@@ -61,14 +64,19 @@ exports.removeOne = function(obj) {
                 var doc = {'key':obj};
                 rp_slivers.remove(doc, function(err,result){
                     if (err) {
+                        callback(false);
                         return false;
                     }
                     else {
+                        callback(true);
                         return true;
                     }
                 });
             }
-            else return false;
+            else {
+                callback(false);
+                return false;
+            }
         }
     },10);
 }
