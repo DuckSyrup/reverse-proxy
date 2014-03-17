@@ -15,19 +15,21 @@ exp.get('/', function(req, res){
 	res.render('index',{title: 'Home'});
 });
 
-//Add a local IP/slice name pair to the routing table from the GET paramaters
-//exp.get('/add', function(req, res){
-//	if (req.query.ip && req.query.key)
-//		res.send(req.query.ip + ' ' + req.query.key);
-//	else
-//		res.send("Key and IP not received.");
-//});
-
 //List all local IP/slice name pairs
 exp.get('/list', function(req,res){
-	res.send(db.getAll(function(items) {
-		JSON.stringify(items);
-	}));
+	db.getAll(function(items) {
+		res.send(JSON.stringify(items));
+	});
+});
+
+//Add a local IP/slice name pair to the routing table from the GET paramaters
+exp.get('/add', function(req, res){
+	if (req.query.ip && req.query.key) {
+		var newObj = {key: req.query.key, ip: req.query.ip};
+		db.addOne(newObj);
+	} else {
+		res.send("Key and/or IP not received.");
+	}
 });
 
 exp.listen(8080);
