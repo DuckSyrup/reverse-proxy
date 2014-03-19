@@ -5,6 +5,7 @@
     "dependencies": {
         "express": "*",
         "jade": "*",
-        "mongodb": "*"
+        "mongodb": "*",
+	"http-proxy": "0.10.4"
     }
 }
