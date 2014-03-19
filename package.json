@@ -6,6 +6,6 @@
         "express": "*",
         "jade": "*",
         "mongodb": "*",
-	"http-proxy": "0.10.4"
+	“request”: “*”
     }
 }
