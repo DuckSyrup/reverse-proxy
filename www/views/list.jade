@@ -1,0 +1,16 @@
+extends layout
+
+block content
+	if items
+		table
+			tr
+				td Slice Name
+				td IP
+			each value, key in items
+				tr
+					td= key
+					td= value
+			else
+				p No items in list
+	else
+		p No items in list

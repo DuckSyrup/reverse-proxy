@@ -13,13 +13,13 @@ var rp = require('./reverse-proxy');
 
 //Basic statistics and landing page
 exp.get('/', function(req, res){
-	res.render('index',{title: 'Home'});
+	res.render('index');
 });
 
 //List all local IP/slice name pairs
 exp.get('/list', function(req,res){
 	db.getAll(function(items) {
-		res.send(JSON.stringify(items));
+		res.render('list', {items: items});
 	});
 });
 
