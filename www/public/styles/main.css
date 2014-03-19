@@ -1,0 +1,9 @@
+body {
+}
+
+table,td,tr {
+	font-size: inherit;
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+

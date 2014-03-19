@@ -1,13 +1,14 @@
 var express = require('express');
 exp = express();
+
 //We use www as the containing folder for all front-facing webserver files
+exp.use(express.static(__dirname + '/www/public'))
 exp.set('views', __dirname + '/www/views');
 exp.set('view engine', 'jade');
-exp.use(express.static(__dirname + '/www/public'))
-exp.use(express.bodyParser());
 
 var url = require('url');
 
+//GENI-specific modules
 var db = require('./db_api');
 var rp = require('./reverse-proxy');
 
