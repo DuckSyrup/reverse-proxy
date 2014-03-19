@@ -5,6 +5,7 @@ exp = express();
 exp.use(express.static(__dirname + '/www/public'))
 exp.set('views', __dirname + '/www/views');
 exp.set('view engine', 'jade');
+exp.use(express.favicon(__dirname + '/www/public/images/geni.ico'));
 
 var url = require('url');
 
