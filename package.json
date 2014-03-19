@@ -5,6 +5,8 @@
     "dependencies": {
         "express": "*",
         "jade": "*",
-        "mongodb": "*"
+        "mongodb": "*",
+        "stylus": "*",
+        "nib": "*"
     }
 }
