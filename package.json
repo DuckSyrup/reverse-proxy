@@ -1,5 +1,6 @@
 {
     "name": "reverse-proxy",
+    "description": "Reverse proxy developed for use with GENI",
     "version": "0.0.1",
     "dependencies": {
         "express": "*",
