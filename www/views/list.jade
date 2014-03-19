@@ -5,7 +5,7 @@ block content
 		table
 			tr
 				td Slice Name
-				td IP
+				td Local IP Address
 			each value, key in items
 				tr
 					td= key
@@ -14,3 +14,19 @@ block content
 				p No items in list
 	else
 		p No items in list
+	
+	div
+		form(action='/add', method='post')
+			div
+				label(for='key') Slice name
+					input(id='key', type='text', value='', name='key')
+			div
+				label(for='ip') Local IP Adress
+					input(id='ip', type='text', value='', name='ip')
+			input(type='submit', value='Add Route')
+	div
+		form(action='/remove', method='post')
+			div
+				label(for='key') Slice name
+					input(id='key', type='text', value='', name='key')
+			input(type='submit', value='Remove Route')

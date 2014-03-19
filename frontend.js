@@ -7,6 +7,10 @@ exp.set('views', __dirname + '/www/views');
 exp.set('view engine', 'jade');
 exp.use(express.favicon(__dirname + '/www/public/images/geni.ico'));
 
+//Middleware to use POSTs
+exp.use(express.json());
+exp.use(express.urlencoded());
+
 var url = require('url');
 
 //GENI-specific modules
@@ -14,22 +18,22 @@ var db = require('./db_api');
 var rp = require('./reverse-proxy');
 
 //Basic statistics and landing page
-exp.get('/', function(req, res){
+exp.get('/', function(req, res) {
 	res.render('index');
 });
 
 //List all local IP/slice name pairs
-exp.get('/list', function(req,res){
+exp.get('/list', function(req,res) {
 	db.getAll(function(items) {
 		res.render('list', {items: items});
 	});
 });
 
 //Remove a local slice name and its local IP pair from the routing table using GET paramaters
-exp.get('/remove', function(req,res){
-	if (req.query.key) {
-		rp.removeRoute(req.query.key, function(worked) {
-			worked ? res.send('Removed ' + req.query.key) : res.send('Failed to remove ' + req.query.key);
+exp.post('/remove', function(req,res) {
+	if (req.body.key) {
+		rp.removeRoute(req.body.key, function(worked) {
+			worked ? res.send('Removed ' + req.body.key) : res.send('Failed to remove ' + req.body.key);
 		});
 	} else {
 		res.send("Key not received");
@@ -37,9 +41,9 @@ exp.get('/remove', function(req,res){
 });
 
 //Add a local IP/slice name pair to the routing table from the GET paramaters
-exp.get('/add', function(req, res){
-	if (req.query.ip && req.query.key) {
-		var newObj = {key: req.query.key, ip: req.query.ip};
+exp.post('/add', function(req, res) {
+	if (req.body.ip && req.body.key) {
+		var newObj = {key: req.body.key, ip: req.body.ip};
 		rp.addRoute(newObj, function(worked) {
 			worked ? res.send('Added ' + newObj) : res.send('Failed to add ' + newObj);
 		});
