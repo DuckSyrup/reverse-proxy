@@ -2,5 +2,3 @@
 /node_modules/express
 /node_modules/jade
 /node_modules/mongodb
-/node_modules/stylus
-/node_modules/nib
