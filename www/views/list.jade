@@ -19,14 +19,14 @@ block content
 		form(action='/add', method='post')
 			div
 				label(for='key') Slice name
-					input(id='key', type='text', value='', name='key')
+					input(id='addKey', type='text', value='', name='key')
 			div
 				label(for='ip') Local IP Adress
-					input(id='ip', type='text', value='', name='ip')
+					input(id='addIP', type='text', value='', name='ip')
 			input(type='submit', value='Add Route')
 	div
 		form(action='/remove', method='post')
 			div
 				label(for='key') Slice name
-					input(id='key', type='text', value='', name='key')
+					input(id='removeKey', type='text', value='', name='key')
 			input(type='submit', value='Remove Route')
