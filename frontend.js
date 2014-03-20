@@ -33,10 +33,10 @@ exp.get('/list', function(req,res) {
 exp.post('/remove', function(req,res) {
 	if (req.body.key) {
 		backend.removeRoute(req.body.key, function(worked) {
-			worked ? res.send('Removed ' + req.body.key) : res.send('Failed to remove ' + req.body.key);
+			res.render('remove', {worked: worked, mess: 'Attempting to remove ' + req.body.key + '...', item:req.body.key});
 		});
 	} else {
-		res.send("Key not received");
+		res.render('remove', {worked: false, mess: 'Key not received.', item: 'UNDEFINED'});
 	}
 });
 
@@ -45,10 +45,15 @@ exp.post('/add', function(req, res) {
 	if (req.body.ip && req.body.key) {
 		var newObj = {key: req.body.key, ip: req.body.ip};
 		backend.addRoute(newObj, function(worked) {
-			worked ? res.send('Added ' + newObj) : res.send('Failed to add ' + newObj);
+			res.render('add', {worked: worked, mess: 'Attempting to add ' + newObj.key + '...', item:newObj});
 		});
 	} else {
-		res.send("Key and/or IP not received.");
+		if (req.body.ip && !req.body.key)
+			res.render('add', {worked: false, mess: 'Key not received.', item:{key: 'UNDEFINED', ip: req.body.ip}});
+		else if (req.body.key && !req.body.ip)
+			res.render('add', {worked: false, mess: 'IP not received.', item:{key: req.body.key, ip: 'UNDEFINED'}});
+		else
+			res.render('add', {worked: false, mess: 'Key and IP not received.', item:{key: 'UNDEFINED', ip: 'UNDEFINED'}});
 	}
 });
 
