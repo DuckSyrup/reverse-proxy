@@ -1,26 +1,19 @@
 var http = require('http'),
-    httpProxy = require('http-proxy'),
+    httpProxy = require('./rev-proxy/rev-proxy'),
     db_api = require('./db_api');
     
     
 var ready = false;
 
-exports = function(port) {
-    db_api.getAll(function(routes){
-        var options = {
-            pathnameOnly: true,
-            router: routes,
-            target: {
-                protocol: 'http:'
-            }
-        };
-        
-        var proxyServer = httpProxy.createServer(options);
-        proxyServer.listen(port||8080);
-        ready = true;
-    });
-}
-
+db_api.getAll(function(routes){
+    var options = {
+        port: 3000,
+        table: routes
+    };
+    
+    httpProxy.init(options);
+    ready = true;
+});
 
 
 //var timer = setInterval(function(){
@@ -30,13 +23,13 @@ exports = function(port) {
 //    }
 //},10);
 
-exports.addRoute = function(route, target, callback) {
+exports.addRoute = function(obj, callback) {
     var timer = setInterval(function(){
         if (ready) {
             clearInterval(timer);
-            db_api.addOne({key:route, ip:target}, function(worked) {
+            db_api.addOne({key:obj.key, ip:obj.ip}, function(worked) {
                 if (worked) {
-                    httpProxy.ProxyTable.addRoute('/'+route, target);
+                    httpProxy.addRoute(obj);
                     callback(true);
                 }
                 else {
@@ -53,7 +46,7 @@ exports.removeRoute = function(route, callback) {
             clearInterval(timer);
             db_api.removeOne(route, function(worked) {
                 if (worked) {
-                    httpProxy.ProxyTable.removeRoute(route);
+                    httpProxy.removeRoute(route);
                     callback(true);
                 }
                 else {
