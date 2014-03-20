@@ -15,7 +15,7 @@ var url = require('url');
 
 //GENI-specific modules
 var db = require('./db_api');
-var rp = require('./reverse-proxy');
+var backend = require('./backend');
 
 //Basic statistics and landing page
 exp.get('/', function(req, res) {
@@ -32,7 +32,7 @@ exp.get('/list', function(req,res) {
 //Remove a local slice name and its local IP pair from the routing table using GET paramaters
 exp.post('/remove', function(req,res) {
 	if (req.body.key) {
-		rp.removeRoute(req.body.key, function(worked) {
+		backend.removeRoute(req.body.key, function(worked) {
 			worked ? res.send('Removed ' + req.body.key) : res.send('Failed to remove ' + req.body.key);
 		});
 	} else {
@@ -44,7 +44,7 @@ exp.post('/remove', function(req,res) {
 exp.post('/add', function(req, res) {
 	if (req.body.ip && req.body.key) {
 		var newObj = {key: req.body.key, ip: req.body.ip};
-		rp.addRoute(newObj, function(worked) {
+		backend.addRoute(newObj, function(worked) {
 			worked ? res.send('Added ' + newObj) : res.send('Failed to add ' + newObj);
 		});
 	} else {

@@ -1,58 +1,35 @@
-var http = require('http'),
-    httpProxy = require('./rev-proxy/rev-proxy'),
-    db_api = require('./db_api');
-    
-    
-var ready = false;
+var express = require('express'),
+app = express(),
+request = require('request');
 
-db_api.getAll(function(routes){
-    var options = {
-        port: 3000,
-        table: routes
-    };
-    
-    httpProxy.init(options);
-    ready = true;
+process.on('uncaughtException', function(err) {
+	console.log('uncaught exception: ' + err);
 });
 
+var table = {};
 
-//var timer = setInterval(function(){
-//    if (ready) {
-//        clearInterval(timer);
-//        
-//    }
-//},10);
-
-exports.addRoute = function(obj, callback) {
-    var timer = setInterval(function(){
-        if (ready) {
-            clearInterval(timer);
-            db_api.addOne({key:obj.key, ip:obj.ip}, function(worked) {
-                if (worked) {
-                    httpProxy.addRoute(obj);
-                    callback(true);
-                }
-                else {
-                    callback(false);
-                }
-            });
-        }
-    },10);
+exports.init = function(options) {
+    if (options.table) {
+        table = options.table;
+    }
+    var port = options.port||3000;
+    app.listen(port);
 }
 
-exports.removeRoute = function(route, callback) {
-    var timer = setInterval(function(){
-        if (ready) {
-            clearInterval(timer);
-            db_api.removeOne(route, function(worked) {
-                if (worked) {
-                    httpProxy.removeRoute(route);
-                    callback(true);
-                }
-                else {
-                    callback(false);
-                }
-            });
-        }
-    },10);
+exports.addRoute = function(obj){
+    table[obj.key] = obj.ip;
+    console.log('added route: ' + JSON.stringify(table));
 }
+
+exports.removeRoute = function(obj) {
+    delete table[obj];
+}
+
+
+app.get('/:key', function(req, res){
+    try{
+        request.get('http://'+table[req.params.key]).pipe(res);
+    }catch(e) {
+        res.send(JSON.stringify(e));
+    }
+});
