@@ -1,0 +1,8 @@
+extends mod
+
+block modContent
+	div #{mess}
+	if worked
+		div= 'Successfully removed ' + item + '.'
+	else
+		div= 'Could not remove ' + item + '.'
