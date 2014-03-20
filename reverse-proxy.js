@@ -26,10 +26,8 @@ exports.removeRoute = function(obj) {
 }
 
 
-app.get('/:key', function(req, res){
-    try{
-        request.get('http://'+table[req.params.key]).pipe(res);
-    }catch(e) {
-        res.send(JSON.stringify(e));
+exports.proxy = function(key, req, res){
+    if (table[key]) {
+        request.get('http://'+table[key]).pipe(res);
     }
-});
+}

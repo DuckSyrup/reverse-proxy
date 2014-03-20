@@ -56,3 +56,7 @@ exports.removeRoute = function(route, callback) {
         }
     },10);
 }
+
+exports.proxy = function(key, req, res) {
+    rp.proxy(key, req, res);
+}
