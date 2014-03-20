@@ -2,13 +2,16 @@ extends layout
 
 block content
 	if items
+		-var sliceURL = '/slice/'
 		table
 			tr
 				td Slice Name
 				td Local IP Address
 			each value, key in items
+				-var link = sliceURL + key
 				tr
-					td= key
+					td
+						a(href='#{link}') #{key}
 					td= value
 			else
 				p No items in list

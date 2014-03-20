@@ -2,3 +2,14 @@ extends layout
 
 block content
 	div Welcome to the GENI Reverse Proxy
+	br
+	div
+		a(href='/list') Add/Remove Routes
+	br
+	if items
+		-var sliceURL = '/slice/'
+		each key in items
+			-var link = sliceURL + key
+			div
+				a(href='#{link}') #{key}
+	

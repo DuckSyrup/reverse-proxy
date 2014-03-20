@@ -19,7 +19,13 @@ var backend = require('./backend');
 
 //Basic statistics and landing page
 exp.get('/', function(req, res) {
-	res.render('index');
+	db.getAll(function(items) {
+		res.render('index', {items: items});
+	});
+});
+
+exp.get('/slice/:key', function(req, res) {
+	backend.proxy(req.params.key, req, res)
 });
 
 //List all local IP/slice name pairs
