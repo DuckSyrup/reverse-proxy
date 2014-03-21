@@ -22,26 +22,21 @@ exports.addOne = function(obj, callback) {
     var timer = setInterval(function(){
         if (ready) {
             clearInterval(timer);
-            console.log('into addone');
             if (typeof obj.key == 'string' && typeof obj.ip == 'string') {
                 var doc = {'key':obj.key,'ip':obj.ip};
                 rp_slivers.insert(doc, function(err, result){
                     if (err) {
                         console.log('addone err: ' + err);
-                        //timer.clearInterval();
                         callback(false);
                         return false;
                     }
                     else {
-                        console.log('done with addone');
-                        //timer.clearInterval();
                         callback(true);
                         return true;
                     }
                 });
             }
             else {
-                console.log(typeof obj.key + ' ' + typeof obj.ip)
                 //timer.clearInterval();
                 callback(false);
                 return false;
