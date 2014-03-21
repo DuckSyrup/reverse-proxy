@@ -14,14 +14,6 @@ db_api.getAll(function(routes){
     ready = true;
 });
 
-
-//var timer = setInterval(function(){
-//    if (ready) {
-//        clearInterval(timer);
-//        
-//    }
-//},10);
-
 exports.addRoute = function(obj, callback) {
     var timer = setInterval(function(){
         if (ready) {

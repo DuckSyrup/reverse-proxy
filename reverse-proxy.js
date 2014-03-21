@@ -14,7 +14,6 @@ exports.init = function(options) {
 
 exports.addRoute = function(obj){
     table[obj.key] = obj.ip;
-    console.log('added route: ' + JSON.stringify(table));
 }
 
 exports.removeRoute = function(obj) {
