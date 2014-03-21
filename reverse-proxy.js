@@ -1,5 +1,3 @@
-var express = require('express'),
-app = express(),
 request = require('request');
 
 process.on('uncaughtException', function(err) {
@@ -12,8 +10,6 @@ exports.init = function(options) {
     if (options.table) {
         table = options.table;
     }
-    var port = options.port||3000;
-    app.listen(port);
 }
 
 exports.addRoute = function(obj){
