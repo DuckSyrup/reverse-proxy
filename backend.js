@@ -7,7 +7,6 @@ var ready = false;
 
 db_api.getAll(function(routes){
     var options = {
-        port: 3000,
         table: routes
     };
     

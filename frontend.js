@@ -1,17 +1,15 @@
 var express = require('express');
-exp = express();
-
-exp.use(exp.router);
+app = express();
 
 //We use www as the containing folder for all front-facing webserver files
-exp.use(express.static(__dirname + '/www/public'))
-exp.set('views', __dirname + '/www/views');
-exp.set('view engine', 'jade');
-exp.use(express.favicon(__dirname + '/www/public/images/geni.ico'));
+app.use(express.static(__dirname + '/www/public'))
+app.set('views', __dirname + '/www/views');
+app.set('view engine', 'jade');
+app.use(express.favicon(__dirname + '/www/public/images/geni.ico'));
 
 //Middleware to use POSTs
-exp.use(express.json());
-exp.use(express.urlencoded());
+app.use(express.json());
+app.use(express.urlencoded());
 
 var url = require('url');
 
@@ -20,25 +18,25 @@ var db = require('./db_api');
 var backend = require('./backend');
 
 //Basic statistics and landing page
-exp.get('/', function(req, res) {
+app.get('/', function(req, res) {
 	db.getAll(function(items) {
 		res.render('index', {items: items});
 	});
 });
 
-exp.get('/slice/:key', function(req, res) {
-	backend.proxy(req.params.key, req, res)
+app.get('/slice/:key', function(req, res) {
+	backend.proxy(req.params.key, req, res);
 });
 
 //List all local IP/slice name pairs
-exp.get('/list', function(req,res) {
+app.get('/list', function(req,res) {
 	db.getAll(function(items) {
 		res.render('list', {items: items});
 	});
 });
 
 //Remove a local slice name and its local IP pair from the routing table using GET paramaters
-exp.post('/remove', function(req,res) {
+app.post('/remove', function(req,res) {
 	if (req.body.key) {
 		backend.removeRoute(req.body.key, function(worked) {
 			res.render('remove', {worked: worked, mess: 'Attempting to remove ' + req.body.key + '...', item:req.body.key});
@@ -49,7 +47,7 @@ exp.post('/remove', function(req,res) {
 });
 
 //Add a local IP/slice name pair to the routing table from the GET paramaters
-exp.post('/add', function(req, res) {
+app.post('/add', function(req, res) {
 	if (req.body.ip && req.body.key) {
 		var newObj = {key: req.body.key, ip: req.body.ip};
 		backend.addRoute(newObj, function(worked) {
@@ -65,7 +63,7 @@ exp.post('/add', function(req, res) {
 	}
 });
 
-exp.use(function(req, res, next){
+app.use(function(req, res, next){
 	res.status(404);
 	
 	// respond with html page
@@ -84,4 +82,4 @@ exp.use(function(req, res, next){
 	res.type('txt').send('Not found');
 });
 
-exp.listen(8080);
+app.listen(8080);
