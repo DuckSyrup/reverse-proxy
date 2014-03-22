@@ -31,6 +31,7 @@ app.get('/slice/:key', function(req, res) {
 //List all local IP/slice name pairs
 app.get('/list', function(req,res) {
 	db.getAll(function(items) {
+		console.log(JSON.stringify(items));
 		res.render('list', {items: items});
 	});
 });
@@ -81,5 +82,10 @@ app.use(function(req, res, next){
 	// default to plain-text. send()
 	res.type('txt').send('Not found');
 });
+
+//Generate a URL for a route
+function generateURL(key) {
+	return ('/slice/' + key);
+}
 
 app.listen(8080);
