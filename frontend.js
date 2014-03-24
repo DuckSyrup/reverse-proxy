@@ -96,4 +96,4 @@ function generateURL(key) {
 	return ('/slice/' + key);
 }
 
-app.listen(8080);
+app.listen(8080, '0.0.0.0');
