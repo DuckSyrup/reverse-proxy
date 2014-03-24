@@ -25,8 +25,10 @@ app.get('/', function(req, res) {
 	});
 });
 
-app.get('/:type(s|slice)/:key', function(req, res) {
-	backend.proxy(req.params.key, req, res);
+app.get('/:type(s|slice)/:key*', function(req, res) {
+	var path;
+	req.params[0] == undefined ? path = '/' : path = req.params[0];
+	backend.proxy(req.params.key, req, res, path);
 });
 
 //List all local IP/slice name pairs

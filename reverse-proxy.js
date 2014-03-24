@@ -21,8 +21,8 @@ exports.removeRoute = function(obj) {
 }
 
 
-exports.proxy = function(key, req, res){
+exports.proxy = function(key, req, res, path){
     if (table[key]) {
-        request.get('http://'+table[key]).pipe(res);
+        request.get('http://'+table[key] + path).pipe(res);
     }
 }
