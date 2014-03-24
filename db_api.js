@@ -22,8 +22,8 @@ exports.addOne = function(obj, callback) {
     var timer = setInterval(function(){
         if (ready) {
             clearInterval(timer);
-            if (typeof obj.key == 'string' && typeof obj.ip == 'string') {
-                var doc = {'key':obj.key,'ip':obj.ip};
+            if (typeof obj.key == 'string' && typeof obj.ip == 'string' && typeof obj.des == 'string') {
+                var doc = {'key':obj.key,'ip':obj.ip,'des':obj.des};
                 rp_slivers.insert(doc, function(err, result){
                     if (err) {
                         console.log('addone err: ' + err);
