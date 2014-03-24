@@ -25,7 +25,7 @@ app.get('/', function(req, res) {
 	});
 });
 
-app.get('/s/:key', function(req, res) {
+app.get('/:type(s|slice)/:key*', function(req, res) {
 	backend.proxy(req.params.key, req, res);
 });
 
@@ -96,4 +96,9 @@ function generateURL(key) {
 	return ('/s/' + key);
 }
 
-app.listen(8080, '128.95.1.115');
+var ip, port;
+
+process.argv[2] ? ip=process.argv[2] : 'localhost';
+process.argv[3] ? port=process.argv[3] : 8080;
+
+app.listen(port, ip);
