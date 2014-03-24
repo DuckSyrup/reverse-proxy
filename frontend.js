@@ -19,20 +19,20 @@ var backend = require('./backend');
 
 //Basic statistics and landing page
 app.get('/', function(req, res) {
-	db.getAll(function(items) {
+	db.getAllData(function(items) {
 		items = appendURLs(items);
 		res.render('index', {items: items});
 	});
 });
 
-app.get('/slice/:key', function(req, res) {
+app.get('/s/:key', function(req, res) {
 	backend.proxy(req.params.key, req, res);
 });
 
 //List all local IP/slice name pairs
 app.get('/list', function(req,res) {
 	db.getAllData(function(items) {
-		fitems = appendURLs(items);
+		items = appendURLs(items);
 		res.render('list', {items: items});
 	});
 });
@@ -93,7 +93,7 @@ function appendURLs(items) {
 
 //Generate a URL for a route
 function generateURL(key) {
-	return ('/slice/' + key);
+	return ('/s/' + key);
 }
 
 app.listen(8080, '128.95.1.115');
