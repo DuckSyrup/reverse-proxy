@@ -25,7 +25,7 @@ app.get('/', function(req, res) {
 	});
 });
 
-app.get('/:type(s|slice)/:key*', function(req, res) {
+app.get('/:type(s|slice)/:key', function(req, res) {
 	backend.proxy(req.params.key, req, res);
 });
 
@@ -98,7 +98,7 @@ function generateURL(key) {
 
 var ip, port;
 
-process.argv[2] ? ip=process.argv[2] : 'localhost';
-process.argv[3] ? port=process.argv[3] : 8080;
-
+process.argv[2] ? ip=process.argv[2] : ip='localhost';
+process.argv[3] ? port=process.argv[3] : port=8080;
+console.log('Listening on ' + ip + ':' + port);
 app.listen(port, ip);
