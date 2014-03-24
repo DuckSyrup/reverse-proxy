@@ -108,7 +108,7 @@ exports.getAllData = function(callback) {
                 else {
                     var retItems = {};
                     for (var i in items) {
-                        retItems[items[i].key] = {ip:items[i].ip, key:items[i].key};
+                        retItems[items[i].key] = {ip:items[i].ip, key:items[i].key, des:items[i].des};
                     }
                     callback(retItems);
                     return true;

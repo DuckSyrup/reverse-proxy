@@ -20,6 +20,7 @@ var backend = require('./backend');
 //Basic statistics and landing page
 app.get('/', function(req, res) {
 	db.getAll(function(items) {
+		items = appendURLs(items);
 		res.render('index', {items: items});
 	});
 });
@@ -30,8 +31,8 @@ app.get('/slice/:key', function(req, res) {
 
 //List all local IP/slice name pairs
 app.get('/list', function(req,res) {
-	db.getAll(function(items) {
-		console.log(JSON.stringify(items));
+	db.getAllData(function(items) {
+		fitems = appendURLs(items);
 		res.render('list', {items: items});
 	});
 });
@@ -50,7 +51,7 @@ app.post('/remove', function(req,res) {
 //Add a local IP/slice name pair to the routing table from the GET paramaters
 app.post('/add', function(req, res) {
 	if (req.body.ip && req.body.key) {
-		var newObj = {key: req.body.key, ip: req.body.ip};
+		var newObj = {key: req.body.key, ip: req.body.ip, des:''};
 		backend.addRoute(newObj, function(worked) {
 			res.render('add', {worked: worked, mess: 'Attempting to add ' + newObj.key + '...', item:newObj});
 		});
@@ -82,6 +83,13 @@ app.use(function(req, res, next){
 	// default to plain-text. send()
 	res.type('txt').send('Not found');
 });
+
+function appendURLs(items) {
+	for (i in items) {
+		items[i].url = generateURL(items[i].key);
+	}
+	return items;
+}
 
 //Generate a URL for a route
 function generateURL(key) {

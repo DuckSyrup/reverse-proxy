@@ -18,7 +18,7 @@ exports.addRoute = function(obj, callback) {
     var timer = setInterval(function(){
         if (ready) {
             clearInterval(timer);
-            db_api.addOne({key:obj.key, ip:obj.ip}, function(worked) {
+            db_api.addOne(obj, function(worked) {
                 if (worked) {
                     rp.addRoute(obj);
                     callback(true);

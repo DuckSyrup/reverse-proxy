@@ -7,9 +7,7 @@ block content
 		a(href='/list') Add/Remove Routes
 	br
 	if items
-		-var sliceURL = '/slice/'
-		each value, key in items
-			-var link = sliceURL + key
+		each i in items
 			div
-				a(href='#{link}') #{key}
+				a(href='#{i.url}') #{i.key}
 	

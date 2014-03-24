@@ -7,12 +7,11 @@ block content
 			tr
 				td Slice Name
 				td Local IP Address
-			each value, key in items
-				-var link = sliceURL + key
+			each i in items
 				tr
 					td
-						a(href='#{link}') #{key}
-					td= value
+						a(href='#{i.url}') #{i.key}
+					td= i.ip
 			else
 				p No items in list
 	else
