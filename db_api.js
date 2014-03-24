@@ -97,6 +97,27 @@ exports.getAll = function(callback) {
     },10);
 }
 
+exports.getAllData = function(callback) {
+    var timer = setInterval(function(){
+        if (ready) {
+            clearInterval(timer);
+            rp_slivers.find().toArray(function(err, items){
+                if (err) {
+                    return false;
+                }
+                else {
+                    var retItems = {};
+                    for (var i in items) {
+                        retItems[items[i].key] = {ip:items[i].ip, key:items[i].key};
+                    }
+                    callback(retItems);
+                    return true;
+                }
+            });
+        }
+    },10);
+}
+
 exports.getOne = function(obj, callback) {
     var timer = setInterval(function(){
         if (ready) {
