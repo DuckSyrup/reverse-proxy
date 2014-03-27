@@ -25,7 +25,15 @@ app.get('/', function(req, res) {
 	});
 });
 
+//Use a route
 app.get('/:type(s|slice)/:key*', function(req, res) {
+	var path;
+	req.params[0] == undefined ? path = '/' : path = req.params[0];
+	backend.proxy(req.params.key, req, res, path);
+});
+
+//Use a route--POST
+app.post('/:type(s|slice)/:key*', function(req,res) {
 	var path;
 	req.params[0] == undefined ? path = '/' : path = req.params[0];
 	backend.proxy(req.params.key, req, res, path);
@@ -67,6 +75,7 @@ app.post('/add', function(req, res) {
 	}
 });
 
+//404 handling
 app.use(function(req, res, next){
 	res.status(404);
 	
@@ -86,6 +95,7 @@ app.use(function(req, res, next){
 	res.type('txt').send('Not found');
 });
 
+//Function to append a URL to the route object
 function appendURLs(items) {
 	for (i in items) {
 		items[i].url = generateURL(items[i].key);
