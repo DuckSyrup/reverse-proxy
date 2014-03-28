@@ -75,6 +75,36 @@ app.post('/add', function(req, res) {
 	}
 });
 
+//List through API
+app.get('/api/list', function(req, res) {
+	db.getAllData(function(items) {
+		res.send(items);
+	});
+});
+
+//Remove through API
+app.post('/api/remove', function(req, res) {
+	if (req.body.key){
+		backend.removeRoute(req.body.key, function(worked) {
+			res.send(worked);
+		});
+	} else {
+		res.send('Could not remove ' + req.body.key + '.');
+	}
+});
+
+//Add through API
+app.post('/api/add/', function(req,res) {
+	if (req.body.ip && req.body.key) {
+		var newObj = {key:req.body.key, ip:req.body.ip, des:''};
+		backend.addRoute(newObj, function(worked) {
+			res.send(worked);
+		});
+	} else {
+		res.send('Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '.');
+	}
+});
+
 //404 handling
 app.use(function(req, res, next){
 	res.status(404);
