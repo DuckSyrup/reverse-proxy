@@ -1,6 +1,13 @@
 extends layout
 
+block custHead
+	script(type='text/javascript').
+		setTimeout(function() {
+			window.location.href='/list';
+		}, 10000);
+
 block content
 	div
 		block modContent
+		div Automatically returning to list in 10 seconds...
 		a(href='/list') Return to list.
