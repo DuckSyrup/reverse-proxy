@@ -78,7 +78,14 @@ app.post('/add', function(req, res) {
 //List through API
 app.get('/api/list', function(req, res) {
 	db.getAllData(function(items) {
-		res.json(items);
+		res.json({items:items, worked: true});
+	});
+});
+
+//List through API
+app.post('/api/list', function(req, res) {
+	db.getAllData(function(items) {
+		res.json({items:items, worked: true});
 	});
 });
 
@@ -86,23 +93,42 @@ app.get('/api/list', function(req, res) {
 app.post('/api/remove', function(req, res) {
 	if (req.body.key){
 		backend.removeRoute(req.body.key, function(worked) {
-			res.json(worked);
+			if (worked)
+				message = 'Successfully removed ' + req.body.key + '.';
+			else
+				message:'Could not remove ' + req.body.key + '.';
+			res.json({message:message, key:req.body.key, worked:worked});
 		});
 	} else {
-		res.send('Could not remove ' + req.body.key + '.');
+		res.json({message:'Could not remove ' + req.body.key + '.', key:req.body.key, worked: false});
 	}
 });
 
 //Add through API
-app.post('/api/add/', function(req,res) {
+app.post('/api/add', function(req,res) {
 	if (req.body.ip && req.body.key) {
 		var newObj = {key:req.body.key, ip:req.body.ip, des:''};
 		backend.addRoute(newObj, function(worked) {
-			res.json(worked);
+			if (worked)
+				message = 'Successfully added ' + req.body.key + ' with an IP of ' + req.body.ip + '.';
+			else
+				message = 'Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '.'
+			res.json({message: message, key:req.body.key, ip: req.body.ip, worked:worked});
 		});
 	} else {
-		res.send('Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '.');
+		res.json({message: 'Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '.', key:req.body.key, ip:req.body.ip, worked: false});
 	}
+});
+
+//Invalid API request
+app.get('/api/*', function (req, res) {
+	res.status(404);
+	res.json({error: 'No valid API request given.', worked: false});
+});
+
+app.post('/api/*', function (req, res) {
+	res.status(404);
+	res.json({error: 'No valid API request given.', worked: false});
 });
 
 //404 handling
@@ -111,13 +137,13 @@ app.use(function(req, res, next){
 	
 	// respond with html page
 	if (req.accepts('html')) {
-		res.render('404', { url: req.url });
+		res.render('404');
 		return;
 	}
 	
 	// respond with json
 	if (req.accepts('json')) {
-		res.send({ error: 'Not found' });
+		res.json({ error: '404 - Not found' });
 		return;
 	}
 	
