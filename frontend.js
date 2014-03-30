@@ -19,7 +19,7 @@ var fs = require("fs");
 var db = require('./db_api');
 var backend = require('./backend');
 
-//Config file
+//Loads config file if one exists and then starts the server
 var config_path = './config.json';
 fs.exists(config_path, function (config_exists) {
 	var config;
@@ -91,14 +91,14 @@ app.post('/add', function(req, res) {
 	}
 });
 
-//List through API
+//List through API--GET
 app.get('/api/list', function(req, res) {
 	db.getAllData(function(items) {
 		res.json({items:items, worked: true});
 	});
 });
 
-//List through API
+//List through API--POST
 app.post('/api/list', function(req, res) {
 	db.getAllData(function(items) {
 		res.json({items:items, worked: true});
