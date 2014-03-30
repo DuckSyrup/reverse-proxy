@@ -13,13 +13,25 @@ app.use(express.urlencoded());
 
 var url = require('url');
 var argv = require('optimist').argv;
+var fs = require("fs");
 
 //GENI-specific modules
 var db = require('./db_api');
 var backend = require('./backend');
 
 //Config file
-var config = require('./config.json');
+var config_path = './config.json';
+fs.exists(config_path, function (config_exists) {
+	var config;
+	if (config_exists) {
+		config = require(config_path);
+	}
+	else {
+		console.log('No config file provided.');
+		config = false;
+	}
+	startServer(config);
+});
 
 //Basic statistics and landing page
 app.get('/', function(req, res) {
@@ -168,9 +180,26 @@ function generateURL(key) {
 	return ('/s/' + key);
 }
 
-var ip, port;
+//Start the server.  Called AFTER the file system attempts to find config.json.  Config file overrides defaults, and command line arguments override config file.
+function startServer(config) {
+	//Default variables
+	var ip = "localhost";
+	var port = 8080;
+	var auth_key = 0;
+	
+	//Read from config file, if one is provided.
+	if (config) {
+		if (config.ip) ip = config.ip;
+		if (config.port) port = config.port;
+		if (config.auth_key) auth_key = config.auth_key;
+	}
+	
+	//Take command line arguments
+	if (argv.ip) ip = argv.ip;
+	if (argv.port) port = argv.port;
+	if (argv.auth_key) auth_key = argv.auth_key;
+	
+	console.log('Listening on ' + ip + ':' + port);
+	app.listen(port, ip);
+}
 
-argv.ip ? ip=argv.ip : ip='localhost';
-argv.port ? port = argv.port : port=8080;
-console.log('Listening on ' + ip + ':' + port);
-app.listen(port, ip);
