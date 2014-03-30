@@ -12,10 +12,14 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 var url = require('url');
+var argv = require('optimist').argv;
 
 //GENI-specific modules
 var db = require('./db_api');
 var backend = require('./backend');
+
+//Config file
+var config = require('./config.json');
 
 //Basic statistics and landing page
 app.get('/', function(req, res) {
@@ -166,7 +170,7 @@ function generateURL(key) {
 
 var ip, port;
 
-process.argv[2] ? ip=process.argv[2] : ip='localhost';
-process.argv[3] ? port=process.argv[3] : port=8080;
+argv.ip ? ip=argv.ip : ip='localhost';
+argv.port ? port = argv.port : port=8080;
 console.log('Listening on ' + ip + ':' + port);
 app.listen(port, ip);
