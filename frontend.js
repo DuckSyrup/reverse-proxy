@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 var url = require('url');
-var argv = require('optimist').argv;
+var argv = require('optimist').argv; //Command line parsing--allows lookups for flags
 var fs = require("fs");
 
 //GENI-specific modules
@@ -28,8 +28,7 @@ fs.exists(config_path, function (config_exists) {
 	var config;
 	if (config_exists) {
 		config = require(config_path);
-	}
-	else {
+	} else { //No config file--logs it to console and lets the server start with command line args or defaults
 		console.log('No config file provided.');
 		config = false;
 	}
@@ -121,13 +120,13 @@ app.post('/api/remove', function(req, res) {
 					res.json({message:message, key:req.body.key, worked:worked});
 				});
 			} else {
-				res.json({message:'Could not remove ' + req.body.key + '--auth key not valid.', key:req.body.key, worked: false});
+				res.json({message:'Could not remove ' + req.body.key + '--auth key not valid.', key:req.body.key, worked: false}); //Wrong auth key
 			}
 		} else {
-			res.json({message:'Could not remove ' + req.body.key + '--no auth key received.', key:req.body.key, worked: false});
+			res.json({message:'Could not remove ' + req.body.key + '--no auth key received.', key:req.body.key, worked: false}); //No auth key provided
 		}
 	} else {
-		res.json({message:'Could not remove ' + req.body.key + '.', key:req.body.key, worked: false});
+		res.json({message:'Could not remove ' + req.body.key + '.', key:req.body.key, worked: false}); //Key not received/not valid
 	}
 });
 
@@ -145,13 +144,13 @@ app.post('/api/add', function(req,res) {
 					res.json({message: message, key:req.body.key, ip: req.body.ip, worked:worked});
 				});
 			} else {
-				res.json({message:'Could not remove ' + req.body.key + ' with an IP of ' + req.body.ip + '--auth key not valid.', key:req.body.key, ip:req.body.ip, worked: false});
+				res.json({message:'Could not remove ' + req.body.key + ' with an IP of ' + req.body.ip + '--auth key not valid.', key:req.body.key, ip:req.body.ip, worked: false}); //Wrong auth key
 			}
 		} else {
-			res.json({message:'Could not remove ' + req.body.key + ' with an IP of ' + req.body.ip + '--no auth key received.', key:req.body.key, ip:req.body.ip, worked: false});
+			res.json({message:'Could not remove ' + req.body.key + ' with an IP of ' + req.body.ip + '--no auth key received.', key:req.body.key, ip:req.body.ip, worked: false}); //No auth key provided
 		}
 	} else {
-		res.json({message: 'Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '.', key:req.body.key, ip:req.body.ip, worked: false});
+		res.json({message: 'Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '.', key:req.body.key, ip:req.body.ip, worked: false}); //Key or IP not received/not valid
 	}
 });
 
