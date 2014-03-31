@@ -155,12 +155,13 @@ app.post('/api/add', function(req,res) {
 	}
 });
 
-//Invalid API request
+//Invalid API request--GET
 app.get('/api/*', function (req, res) {
 	res.status(404);
 	res.json({error: 'No valid API request given.', worked: false});
 });
 
+//Invalid API request--POST
 app.post('/api/*', function (req, res) {
 	res.status(404);
 	res.json({error: 'No valid API request given.', worked: false});
