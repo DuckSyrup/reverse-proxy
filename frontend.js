@@ -19,6 +19,9 @@ var fs = require("fs");
 var db = require('./db_api');
 var backend = require('./backend');
 
+//Global variables set by config file or command line arguments--set to default
+var auth_key = 0;
+
 //Loads config file if one exists and then starts the server
 var config_path = './config.json';
 fs.exists(config_path, function (config_exists) {
@@ -108,13 +111,21 @@ app.post('/api/list', function(req, res) {
 //Remove through API
 app.post('/api/remove', function(req, res) {
 	if (req.body.key){
-		backend.removeRoute(req.body.key, function(worked) {
-			if (worked)
-				message = 'Successfully removed ' + req.body.key + '.';
-			else
-				message:'Could not remove ' + req.body.key + '.';
-			res.json({message:message, key:req.body.key, worked:worked});
-		});
+		if (req.body.auth_key) {
+			if (req.body.auth_key == auth_key) {
+				backend.removeRoute(req.body.key, function(worked) {
+					if (worked)
+						message = 'Successfully removed ' + req.body.key + '.';
+					else
+						message:'Could not remove ' + req.body.key + '.';
+					res.json({message:message, key:req.body.key, worked:worked});
+				});
+			} else {
+				res.json({message:'Could not remove ' + req.body.key + '--auth key not valid.', key:req.body.key, worked: false});
+			}
+		} else {
+			res.json({message:'Could not remove ' + req.body.key + '--no auth key received.', key:req.body.key, worked: false});
+		}
 	} else {
 		res.json({message:'Could not remove ' + req.body.key + '.', key:req.body.key, worked: false});
 	}
@@ -123,14 +134,22 @@ app.post('/api/remove', function(req, res) {
 //Add through API
 app.post('/api/add', function(req,res) {
 	if (req.body.ip && req.body.key) {
-		var newObj = {key:req.body.key, ip:req.body.ip, des:''};
-		backend.addRoute(newObj, function(worked) {
-			if (worked)
-				message = 'Successfully added ' + req.body.key + ' with an IP of ' + req.body.ip + '.';
-			else
-				message = 'Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '.'
-			res.json({message: message, key:req.body.key, ip: req.body.ip, worked:worked});
-		});
+		if (req.body.auth_key) {
+			if (req.body.auth_key == auth_key) {
+				var newObj = {key:req.body.key, ip:req.body.ip, des:''};
+				backend.addRoute(newObj, function(worked) {
+					if (worked)
+						message = 'Successfully added ' + req.body.key + ' with an IP of ' + req.body.ip + '.';
+					else
+						message = 'Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '.'
+					res.json({message: message, key:req.body.key, ip: req.body.ip, worked:worked});
+				});
+			} else {
+				res.json({message:'Could not remove ' + req.body.key + ' with an IP of ' + req.body.ip + '--auth key not valid.', key:req.body.key, ip:req.body.ip, worked: false});
+			}
+		} else {
+			res.json({message:'Could not remove ' + req.body.key + ' with an IP of ' + req.body.ip + '--no auth key received.', key:req.body.key, ip:req.body.ip, worked: false});
+		}
 	} else {
 		res.json({message: 'Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '.', key:req.body.key, ip:req.body.ip, worked: false});
 	}
@@ -185,7 +204,6 @@ function startServer(config) {
 	//Default variables
 	var ip = "localhost";
 	var port = 8080;
-	var auth_key = 0;
 	
 	//Read from config file, if one is provided.
 	if (config) {
