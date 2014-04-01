@@ -220,4 +220,3 @@ function startServer(config) {
 	console.log('Listening on ' + ip + ':' + port);
 	app.listen(port, ip);
 }
-
