@@ -13,12 +13,15 @@ To start, simply run `node frontend.js`.  This will start up the entire applicat
 ###Configuration
 
 The reverse proxy can be easily configured in two ways.  Either copy or rename the `default_config.json` file to `config.json` and set the variables there.  Or, if you prefer, flags can be passed to `frontend.js`, at which point they will override any settings that may have been made in `config.json`.  Flags are passed as expected, eg:
-    node frontend.js --ip=localhost --port=8080 --auth_key=0
+
+```
+node frontend.js --ip=localhost --port=8080 --auth_key=0
+```
 
 ####Options
 
 There are currently three configuration options that may be set.  They are:
 
-1.  ip - the IP to listen on.  Defaults to `localhost`.
-2.  port - the port to listen on.  Defaults to `8080`, although this is generally best set to `80` when you are not testing.
-3.  auth_key - the auth key.  This is used to verify that the person sending the modification request to the API is, in fact, authorized to do so.  This should be kept secret.  Defaults to `0`, but should certainly be changed.
+1.  `ip` - the IP to listen on.  Defaults to `localhost`.
+2.  `port` - the port to listen on.  Defaults to `8080`, although this is generally best set to `80` when you are not testing.
+3.  `auth_key` - the auth key.  This is used to verify that the person sending the modification request to the API is, in fact, authorized to do so.  This should be kept secret.  Defaults to `0`, but should certainly be changed.
