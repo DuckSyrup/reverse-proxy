@@ -13,7 +13,7 @@ app.use(express.urlencoded());
 
 var url = require('url');
 var argv = require('optimist').argv; //Command line parsing--allows lookups for flags
-var fs = require("fs");
+var fs = require('fs');
 
 //GENI-specific modules
 var db = require('./db_api');
@@ -35,13 +35,9 @@ fs.exists(config_path, function (config_exists) {
 	startServer(config);
 });
 
-//Basic statistics and landing page
-app.get('/', function(req, res) {
-	db.getAllData(function(items) {
-		items = appendURLs(items);
-		res.render('index', {items: items});
-	});
-});
+/*---------------
+ROUTES
+---------------*/
 
 //Use a route
 app.get('/:type(s|slice)/:key*', function(req, res) {
@@ -50,11 +46,12 @@ app.get('/:type(s|slice)/:key*', function(req, res) {
 	backend.proxy(req.params.key, req, res, path);
 });
 
-//Use a route--POST
-app.post('/:type(s|slice)/:key*', function(req,res) {
-	var path;
-	req.params[0] == undefined ? path = '/' : path = req.params[0];
-	backend.proxy(req.params.key, req, res, path);
+//Basic statistics and landing page
+app.get('/', function(req, res) {
+	db.getAllData(function(items) {
+		items = appendURLs(items);
+		res.render('index', {items: items});
+	});
 });
 
 //List all local IP/slice name pairs
@@ -65,43 +62,12 @@ app.get('/list', function(req,res) {
 	});
 });
 
-//Remove a local slice name and its local IP pair from the routing table using GET paramaters
-app.post('/remove', function(req,res) {
-	if (req.body.key) {
-		backend.removeRoute(req.body.key, function(worked) {
-			res.render('remove', {worked: worked, mess: 'Attempting to remove ' + req.body.key + '...', item:req.body.key});
-		});
-	} else {
-		res.render('remove', {worked: false, mess: 'Key not received.', item: 'UNDEFINED'});
-	}
-});
+/*---------------
+API ROUTES
+---------------*/
 
-//Add a local IP/slice name pair to the routing table from the GET paramaters
-app.post('/add', function(req, res) {
-	if (req.body.ip && req.body.key) {
-		var newObj = {key: req.body.key, ip: req.body.ip, des:''};
-		backend.addRoute(newObj, function(worked) {
-			res.render('add', {worked: worked, mess: 'Attempting to add ' + newObj.key + '...', item:newObj});
-		});
-	} else {
-		if (req.body.ip && !req.body.key)
-			res.render('add', {worked: false, mess: 'Key not received.', item:{key: 'UNDEFINED', ip: req.body.ip}});
-		else if (req.body.key && !req.body.ip)
-			res.render('add', {worked: false, mess: 'IP not received.', item:{key: req.body.key, ip: 'UNDEFINED'}});
-		else
-			res.render('add', {worked: false, mess: 'Key and IP not received.', item:{key: 'UNDEFINED', ip: 'UNDEFINED'}});
-	}
-});
-
-//List through API--GET
+//List through API
 app.get('/api/list', function(req, res) {
-	db.getAllData(function(items) {
-		res.json({items:items, worked: true});
-	});
-});
-
-//List through API--POST
-app.post('/api/list', function(req, res) {
 	db.getAllData(function(items) {
 		res.json({items:items, worked: true});
 	});
