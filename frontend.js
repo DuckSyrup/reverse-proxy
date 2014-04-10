@@ -1,3 +1,7 @@
+/*---------------
+LOAD DEPENDENCIES
+---------------*/
+
 var express = require('express');
 app = express();
 
@@ -18,22 +22,6 @@ var fs = require('fs');
 //GENI-specific modules
 var db = require('./db_api');
 var backend = require('./backend');
-
-//Global variables set by config file or command line arguments--set to default
-var auth_key = 0;
-
-//Loads config file if one exists and then starts the server
-var config_path = './config.json';
-fs.exists(config_path, function (config_exists) {
-	var config;
-	if (config_exists) {
-		config = require(config_path);
-	} else { //No config file--logs it to console and lets the server start with command line args or defaults
-		console.log('No config file provided.');
-		config = false;
-	}
-	startServer(config);
-});
 
 /*---------------
 ROUTES
@@ -152,6 +140,44 @@ app.use(function(req, res, next){
 	res.type('txt').send('Not found');
 });
 
+/*---------------
+SERVER CONFIG AND START
+---------------*/
+
+//Global variables set by config file or command line arguments--set to default
+var auth_key = 0;
+var ip = "localhost";
+var port = 8080;
+
+//Trys to load config file
+var config;
+
+try {
+	config = require('./config.json');
+} catch (e) {
+	config = false;
+	console.log('No config file provided.');
+}
+
+//Read from config file, if one is provided.
+if (config) {
+	if (config.ip) ip = config.ip;
+	if (config.port) port = config.port;
+	if (config.auth_key) auth_key = config.auth_key;
+}
+
+//Take command line arguments.  These override config file options.
+if (argv.ip) ip = argv.ip;
+if (argv.port) port = argv.port;
+if (argv.auth_key) auth_key = argv.auth_key;
+
+console.log('Listening on ' + ip + ':' + port);
+app.listen(port, ip);
+
+/*---------------
+HELPER FUNCTIONS
+---------------*/
+
 //Function to append a URL to the route object
 function appendURLs(items) {
 	for (i in items) {
@@ -163,26 +189,4 @@ function appendURLs(items) {
 //Generate a URL for a route
 function generateURL(key) {
 	return ('/s/' + key);
-}
-
-//Start the server.  Called AFTER the file system attempts to find config.json.  Config file overrides defaults, and command line arguments override config file.
-function startServer(config) {
-	//Default variables
-	var ip = "localhost";
-	var port = 8080;
-	
-	//Read from config file, if one is provided.
-	if (config) {
-		if (config.ip) ip = config.ip;
-		if (config.port) port = config.port;
-		if (config.auth_key) auth_key = config.auth_key;
-	}
-	
-	//Take command line arguments
-	if (argv.ip) ip = argv.ip;
-	if (argv.port) port = argv.port;
-	if (argv.auth_key) auth_key = argv.auth_key;
-	
-	console.log('Listening on ' + ip + ':' + port);
-	app.listen(port, ip);
 }
