@@ -9,11 +9,12 @@ app = express();
 app.use(express.static(__dirname + '/www/public'))
 app.set('views', __dirname + '/www/views');
 app.set('view engine', 'jade');
-app.use(express.favicon(__dirname + '/www/public/images/geni.ico'));
+//app.use(express.favicon(__dirname + '/www/public/images/geni.ico'));
 
 //Middleware to use POSTs
-app.use(express.json());
-app.use(express.urlencoded());
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
 
 var url = require('url');
 var argv = require('optimist').argv; //Command line parsing--allows lookups for flags

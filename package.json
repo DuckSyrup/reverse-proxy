@@ -7,6 +7,7 @@
         "jade": "*",
         "mongodb": "*",
         "request": "*",
-	"optimist": "*"
+        "optimist": "*",
+        "body-parser": "*"
     }
 }
