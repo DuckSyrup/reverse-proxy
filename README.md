@@ -12,13 +12,15 @@ To start, simply run `node frontend.js`.  This will start up the entire applicat
 
 ###Configuration
 
+####Configuration Setup
+
 The reverse proxy can be easily configured in two ways.  Either copy or rename the `default_config.json` file to `config.json` and set the variables there.  Or, if you prefer, flags can be passed to `frontend.js`, at which point they will override any settings that may have been made in `config.json`.  Flags are passed as expected, eg:
 
 ```
 node frontend.js --ip=localhost --port=8080 --auth_key=0
 ```
 
-####Options
+####Configuration Options
 
 There are currently three configuration options that may be set.  They are:
 
