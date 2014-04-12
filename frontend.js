@@ -17,8 +17,8 @@ app.set('view engine', 'jade');
 app.use(require('static-favicon')((__dirname + '/www/public/images/geni.ico')));
 
 var url = require('url');
-var argv = require('optimist').argv; //Command line parsing--allows lookups for flags
 var fs = require('fs');
+var nconf = require('nconf');
 
 //GENI-specific modules
 var db = require('./db_api');
@@ -145,32 +145,16 @@ app.use(function(req, res, next){
 SERVER CONFIG AND START
 ---------------*/
 
-//Global variables set by config file or command line arguments--set to default
-var auth_key = 0;
-var ip = "localhost";
-var port = 8080;
+nconf.argv().file('./config.json');
+nconf.defaults({
+	auth_key: 0,
+	ip: 'localhost',
+	port: 8080
+});
 
-//Trys to load config file
-var config;
-
-try {
-	config = require('./config.json');
-} catch (e) {
-	config = false;
-	console.log('No config file provided.');
-}
-
-//Read from config file, if one is provided.
-if (config) {
-	if (config.ip) ip = config.ip;
-	if (config.port) port = config.port;
-	if (config.auth_key) auth_key = config.auth_key;
-}
-
-//Take command line arguments.  These override config file options.
-if (argv.ip) ip = argv.ip;
-if (argv.port) port = argv.port;
-if (argv.auth_key) auth_key = argv.auth_key;
+var auth_key = nconf.get('auth_key');
+var ip = nconf.get('ip');
+var port = nconf.get('port');
 
 console.log('Listening on ' + ip + ':' + port);
 app.listen(port, ip);
