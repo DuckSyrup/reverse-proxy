@@ -5,16 +5,16 @@ LOAD DEPENDENCIES
 var express = require('express');
 app = express();
 
-//We use www as the containing folder for all front-facing webserver files
-app.use(express.static(__dirname + '/www/public'))
-app.set('views', __dirname + '/www/views');
-app.set('view engine', 'jade');
-//app.use(express.favicon(__dirname + '/www/public/images/geni.ico'));
-
 //Middleware to use POSTs
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
+
+//We use www as the containing folder for all front-facing webserver files
+app.use(express.static(__dirname + '/www/public'))
+app.set('views', __dirname + '/www/views');
+app.set('view engine', 'jade');
+app.use(require('static-favicon')((__dirname + '/www/public/images/geni.ico')));
 
 var url = require('url');
 var argv = require('optimist').argv; //Command line parsing--allows lookups for flags

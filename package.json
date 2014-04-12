@@ -8,6 +8,7 @@
         "mongodb": "*",
         "request": "*",
         "optimist": "*",
-        "body-parser": "*"
+        "body-parser": "*",
+        "static-favicon": "*"
     }
 }
