@@ -21,8 +21,19 @@ exports.removeRoute = function(obj) {
 }
 
 
-exports.proxy = function(key, req, res, path){
+exports.get = function(key, req, res, path){
     if (table[key]) {
         request.get('http://'+table[key] + path).pipe(res);
+    }
+}
+
+exports.post = function(key, req, res, path) {
+    if (table[key]) {
+        var options = {
+            url: 'http://'+table[key]+path,
+            body: req.body,
+            method: 'POST'
+        }
+        request(options).pipe(res);
     }
 }

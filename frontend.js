@@ -28,11 +28,18 @@ var backend = require('./backend');
 ROUTES
 ---------------*/
 
-//Use a route
+//Use a route with get
 app.get('/:type(s|slice)/:key*', function(req, res) {
 	var path;
 	req.params[0] == undefined ? path = '/' : path = req.params[0];
-	backend.proxy(req.params.key, req, res, path);
+	backend.get(req.params.key, req, res, path);
+});
+
+//Use of route with post
+app.post('/:type(s|slice)/:key*', function(req, res){
+    var path;
+    req.params[0] == undefined ? path = '/' : path = req.params[0];
+    backend.post(req.params.key, req, res, path);
 });
 
 //Basic statistics and landing page
