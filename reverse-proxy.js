@@ -35,6 +35,6 @@ exports.post = function(key, req, res, path) {
             body: req.body,
             method: 'POST'
         }
-        request(options).pipe(res);
+        request.post(options).pipe(res);
     }
 }
