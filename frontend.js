@@ -106,10 +106,10 @@ app.post('/api/add', function(req,res) {
 					res.json({message: message, key:req.body.key, ip: req.body.ip, worked:worked});
 				});
 			} else {
-				res.json({message:'Could not remove ' + req.body.key + ' with an IP of ' + req.body.ip + '--auth key not valid.', key:req.body.key, ip:req.body.ip, worked: false}); //Wrong auth key
+				res.json({message:'Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '--auth key not valid.', key:req.body.key, ip:req.body.ip, worked: false}); //Wrong auth key
 			}
 		} else {
-			res.json({message:'Could not remove ' + req.body.key + ' with an IP of ' + req.body.ip + '--no auth key received.', key:req.body.key, ip:req.body.ip, worked: false}); //No auth key provided
+			res.json({message:'Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '--no auth key received.', key:req.body.key, ip:req.body.ip, worked: false}); //No auth key provided
 		}
 	} else {
 		res.json({message: 'Could not add ' + req.body.key + ' with an IP of ' + req.body.ip + '.', key:req.body.key, ip:req.body.ip, worked: false}); //Key or IP not received/not valid
