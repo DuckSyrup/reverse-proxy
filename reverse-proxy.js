@@ -31,6 +31,7 @@ exports.post = function(key, req, res, path) {
     if (table[key]) {
         var options = {
             url: 'http://'+table[key]+path,
+	    headers: req.headers,
             body: req.body,
             method: 'POST'
         }
