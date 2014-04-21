@@ -7,8 +7,7 @@ app = express();
 
 //Middleware to use POSTs
 var bodyParser = require('body-parser');
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded());
+app.use(bodyParser());
 
 //We use www as the containing folder for all front-facing webserver files
 app.use(express.static(__dirname + '/www/public'))
