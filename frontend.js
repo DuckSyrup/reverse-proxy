@@ -7,7 +7,23 @@ app = express();
 
 //Middleware to use POSTs
 var bodyParser = require('body-parser');
-app.use(bodyParser());
+var handleBody = function(req,res,next) {
+	if (req.path.match(/\/s*\//)) {
+		req.rawBody = '';
+		req.setEncoding('utf8');
+		
+		req.on('data', function(chunk) { 
+			req.rawBody += chunk;
+		});
+		
+		req.on('end', function() {
+			next();
+		});
+	} else {
+		bodyParser()(req,res,next);
+	}
+}
+app.use(handleBody);
 
 //We use www as the containing folder for all front-facing webserver files
 app.use(express.static(__dirname + '/www/public'))
