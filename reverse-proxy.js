@@ -35,7 +35,7 @@ exports.post = function(key, req, res, path) {
         var options = {
             url: 'http://'+table[key]+path,
 	    headers: req.headers,
-            body: req.rawBody
+            body: req.rawBody //Pass on the raw body
         }
         request.post(options).pipe(res);
     }

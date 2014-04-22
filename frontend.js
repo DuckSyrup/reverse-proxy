@@ -7,20 +7,20 @@ app = express();
 
 //Middleware to use POSTs
 var bodyParser = require('body-parser');
+
+//Custom body handling middleware
 var handleBody = function(req,res,next) {
-	if (req.path.match(/\/s*\//)) {
+	if (req.path.match(/\/s*\//)) { //If we're just going to pipe this to a slice, we don't want to parse the body--we want to pass on the raw body
 		req.rawBody = '';
 		req.setEncoding('utf8');
-		
 		req.on('data', function(chunk) { 
 			req.rawBody += chunk;
 		});
-		
 		req.on('end', function() {
 			next();
 		});
 	} else {
-		bodyParser()(req,res,next);
+		bodyParser()(req,res,next); //Otherwise, we want to parse the body for use
 	}
 }
 app.use(handleBody);
