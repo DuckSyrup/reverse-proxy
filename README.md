@@ -36,4 +36,4 @@ All requests return a paramater `worked`, which can be used to check if the requ
 
  * `/api/list` - `GET` - Get a list of all slice/IP pairs currently being used.  Returns an object containing `items` (the slice/IP pairs) in addition to `worked`.
  * `/api/remove` - `POST` - Remove a slice/IP pair.  Requires `key` (the name of the slice being removed) and the correct `auth_key`.  Returns an object containing a `message` that describes what happened, the `key` that you attempted to remove, and `worked`.
- * `/api/add` - `POST` - Add a slice/IP pair.  Requires `key` (the name of the slice being added), `ip` (the IP of the local VM that should be routed to), and the correct `auth_key`.  Returns an object containing a `message` that describes what happened, the `key` and `ip` that you attempted to add, and ```worked`.
+ * `/api/add` - `POST` - Add a slice/IP pair.  Requires `key` (the name of the slice being added), `ip` (the IP of the local VM that should be routed to), and the correct `auth_key`.  Returns an object containing a `message` that describes what happened, the `key` and `ip` that you attempted to add, and `worked`.
