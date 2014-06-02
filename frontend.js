@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 
 //Custom body handling middleware
 var handleBody = function(req,res,next) {
-	if (req.path.match(/\/s*\//)) { //If we're just going to send this to a slice, we don't want to parse the body--we want to pass on the raw body
+	if (req.path.match(/\/(s|slice)\//)) { //If we're just going to send this to a slice, we don't want to parse the body--we want to pass on the raw body
 		req.rawBody = '';
 		req.setEncoding('utf8');
 		req.on('data', function(chunk) { 
