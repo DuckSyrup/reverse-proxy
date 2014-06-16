@@ -1,7 +1,7 @@
 {
-    "name": "reverse-proxy",
+    "name": "geni-reverse-proxy",
     "description": "Reverse proxy for use in GENI, to allow multiple web applications to effectively share one public IP.",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "bugs": "https://github.com/DuckSyrup/reverse-proxy/issues",    
     "repository": {"type": "git", "url": "https://github.com/DuckSyrup/reverse-proxy.git"},
     "dependencies": {
