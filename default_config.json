@@ -1,5 +1,6 @@
 {
     "auth_key" : 0,
     "ip" : "localhost",
-    "port" : 8080
+    "port" : 80,
+    "db_url" : "mongodb://username:password@database_url"
 }

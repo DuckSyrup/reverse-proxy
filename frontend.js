@@ -35,9 +35,22 @@ var url = require('url');
 var fs = require('fs');
 var nconf = require('nconf');
 
+/*---------------
+SERVER CONFIG
+---------------*/
+
+nconf.argv().file('./config.json');
+nconf.defaults({
+	auth_key: 0,
+	ip: 'localhost',
+	port: 80,
+	db_url: 'mongodb://db-admin:hellokitty@ds031087.mongolab.com:31087/rp-slivers'
+});
+
+
 //GENI-specific modules
-var db = require('./db_api');
-var backend = require('./backend');
+var db = require('./db_api').db(nconf.get('db_url'));
+var backend = require('./backend').backend(db);
 
 /*---------------
 ROUTES
@@ -164,15 +177,8 @@ app.use(function(req, res, next){
 });
 
 /*---------------
-SERVER CONFIG AND START
+SERVER START
 ---------------*/
-
-nconf.argv().file('./config.json');
-nconf.defaults({
-	auth_key: 0,
-	ip: 'localhost',
-	port: 8080
-});
 
 var auth_key = nconf.get('auth_key');
 var ip = nconf.get('ip');

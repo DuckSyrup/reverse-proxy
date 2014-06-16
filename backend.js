@@ -1,52 +1,58 @@
 var http = require('http'),
-    rp = require('./reverse-proxy'),
-    db_api = require('./db_api');
-    
-    
-var ready = false;
+    rp = require('./reverse-proxy');
 
-db_api.getAll(function(routes){
-    var options = {
-        table: routes
-    };
+function backend_proto(db_api) {
     
-    rp.init(options);
-    ready = true;
-});
+    var ready = false;
 
-exports.addRoute = function(obj, callback) {
-    var timer = setInterval(function(){
-        if (ready) {
-            clearInterval(timer);
-            db_api.addOne(obj, function(worked) {
-                if (worked) {
-                    rp.addRoute(obj);
-                    callback(true);
-                }
-                else {
-                    callback(false);
-                }
-            });
-        }
-    },10);
+    db_api.getAll(function(routes){
+        var options = {
+            table: routes
+        };
+        
+        rp.init(options);
+        ready = true;
+    });
+
+
+    this.addRoute = function(obj, callback) {
+        var timer = setInterval(function(){
+            if (ready) {
+                clearInterval(timer);
+                db_api.addOne(obj, function(worked) {
+                    if (worked) {
+                        rp.addRoute(obj);
+                        callback(true);
+                    }
+                    else {
+                        callback(false);
+                    }
+                });
+            }
+        },10);
+    }
+    
+    this.removeRoute = function(route, callback) {
+        var timer = setInterval(function(){
+            if (ready) {
+                clearInterval(timer);
+                db_api.removeOne(route, function(worked) {
+                    if (worked) {
+                        rp.removeRoute(route);
+                        callback(true);
+                    }
+                    else {
+                        callback(false);
+                    }
+                });
+            }
+        },10);
+    }
+    
+    this.get = rp.get;
+    this.post = rp.post;
 }
-
-exports.removeRoute = function(route, callback) {
-    var timer = setInterval(function(){
-        if (ready) {
-            clearInterval(timer);
-            db_api.removeOne(route, function(worked) {
-                if (worked) {
-                    rp.removeRoute(route);
-                    callback(true);
-                }
-                else {
-                    callback(false);
-                }
-            });
-        }
-    },10);
+    
+exports.backend = function(db_api) {
+    return new backend_proto(db_api);
 }
-
-exports.get = rp.get;
-exports.post = rp.post;
